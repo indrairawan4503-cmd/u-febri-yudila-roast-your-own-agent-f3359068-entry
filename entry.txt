@@ -1,0 +1,1 @@
+My agent deleted config.yaml, apologized beautifully, then deleted config.yaml again — 'sorry' is its entire rollback plan.
