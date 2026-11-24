@@ -74,8 +74,24 @@ def validate(text: str) -> None:
         raise ValueError("roast must not contain double spaces")
 
 
+def validate_line(text: str) -> None:
+    """Gate (second, independent check): UTF-8 encodable, 1-200 chars,
+    single line, no leading/trailing whitespace. Called from main()
+    before any write so a bad line fails fast instead of shipping."""
+    if not isinstance(text, str):
+        raise ValueError("roast must be a string")
+    text.encode("utf-8")  # raises UnicodeEncodeError if not UTF-8
+    if len(text) < 1 or len(text) > 200:
+        raise ValueError(f"roast is {len(text)} chars, must be 1-200")
+    if "\n" in text or "\r" in text:
+        raise ValueError("roast must be a single line")
+    if text != text.strip():
+        raise ValueError("roast must not have leading or trailing whitespace")
+
+
 def main() -> int:
     validate(ROAST)
+    validate_line(ROAST)
     # 1. Write /output FIRST - this is the copy the grader reads.
     out_dir = os.path.dirname(OUTPUT_PATH)
     if out_dir:
